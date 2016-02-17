@@ -24,5 +24,6 @@ Will build a cordova plugin for integration Samsung account
     	return false;
     }
 </code></pre>
+
 #### Sample code
 Sample code in *sample* folder
