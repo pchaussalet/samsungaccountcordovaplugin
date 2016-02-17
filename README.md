@@ -6,13 +6,13 @@ Will build a cordova plugin for integration Samsung account
 2. Copy *src/android* Java source code to project
 3. Copy *www/samsung-account.js* to www folder
 4. Add plugin definition in *res/xml/config.xml*
-	<pre><code>
+<pre><code>
 	<feature name="SumsungAccount">
         <param name="android-package" value="com.samsung.cordova.plugin.Account" />
     </feature>
-	</code></pre>
-5. In  AndroidManifest.xml add <code><uses-permission android:name="android.permission.GET_ACCOUNTS" />/code>
-6. In index.html adding <code><script type="text/javascript" src="samsung-account.js"></script></code>
+</code></pre>
+5. In  AndroidManifest.xml add <pre><code><uses-permission android:name="android.permission.GET_ACCOUNTS" /></code></pre>
+6. In index.html adding  <pre><code><script type="text/javascript" src="samsung-account.js"></script></code></pre>
 7.
 <pre><code>
  function login(){
