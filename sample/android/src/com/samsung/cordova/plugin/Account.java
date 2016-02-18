@@ -2,15 +2,15 @@ package com.samsung.cordova.plugin;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.w3c.dom.Document;
@@ -101,6 +101,7 @@ public class Account extends CordovaPlugin {
 	private void getAuthenticateUserIDCore(String api_server_url,
 			String accessToken) {
 		try {
+			/*
 			String url = "http://" + api_server_url
 					+ "/v2/license/security/authorizeToken?authToken="
 					+ accessToken;
@@ -123,6 +124,29 @@ public class Account extends CordovaPlugin {
 			} else {
 				throw new Exception("validate accessToken failed, http code "
 						+ httpStatusCode);
+			}*/
+			URL url = new URL( "http://" + api_server_url
+					+ "/v2/license/security/authorizeToken?authToken="
+					+ accessToken);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			//conn.setDoOutput(true);
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Authorization", "Basic " + Base64.encodeToString(
+					(this.clientId + ":" + this.clientSecret)
+							.getBytes(), Base64.NO_WRAP));
+			conn.setRequestProperty("x-osp-appId", this.clientId);
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			int responseCode = conn.getResponseCode();
+			if (responseCode == 200) {
+				InputStream inputStr = conn.getInputStream();
+				String encoding = conn.getContentEncoding() == null ? "UTF-8"
+						: conn.getContentEncoding();
+				String content = inputStreamTOString(inputStr, encoding);
+				int a = 10;
+				a++;
+				/************** For getting response from HTTP URL end ***************/
+
 			}
 		} catch (Exception e) {
 			this.callbackContext.error(e.getMessage());
@@ -143,7 +167,7 @@ public class Account extends CordovaPlugin {
 		return userID;
 	}
 
-	private String inputStreamTOString(InputStream in) throws Exception {
+	private String inputStreamTOString(InputStream in,String encoding) throws Exception {
 		final int BUFFER_SIZE = 4096;
 		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 		byte[] data = new byte[BUFFER_SIZE];
@@ -152,7 +176,7 @@ public class Account extends CordovaPlugin {
 			outStream.write(data, 0, count);
 
 		data = null;
-		return new String(outStream.toByteArray());
+		return new String(outStream.toByteArray(),encoding);
 	}
 
 	@Override
